@@ -92,6 +92,8 @@ private String readHTTPRequest(InputStream is)
 		  	String[] split = line.split(" ");
 		  	if (split[0].equals("GET"))
 				path = "."+split[1];
+				System.err.println("Path: '"+path+"'");
+				if (path.equals("./")) path = "./index.html";
 		  
       	} catch (Exception e) {
          	System.err.println("Request error: "+e);
