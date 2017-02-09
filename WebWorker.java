@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.util.TimeZone;
 import java.lang.String;
 import java.util.Calendar;
+import java.nio.file.*;
 
 public class WebWorker implements Runnable
 {
@@ -52,16 +53,17 @@ public void run()
 {
    System.err.println("Handling connection...");
    try {
-      InputStream  is = socket.getInputStream();
-      OutputStream os = socket.getOutputStream();
-      String path = readHTTPRequest(is);
-	  Boolean exists = checkForFile(path);
-      writeHTTPHeader(os,"text/html",exists);
-      writeContent(os, path);
-      os.flush();
-      socket.close();
+      	InputStream  is = socket.getInputStream();
+      	OutputStream os = socket.getOutputStream();
+      	String path = readHTTPRequest(is);
+	  	Boolean exists = checkForFile(path);
+		String contentType = getContentType(path);
+      	writeHTTPHeader(os,contentType,exists);
+      	writeContent(os, path);
+      	os.flush();
+      	socket.close();
    } catch (Exception e) {
-      System.err.println("Output error: "+e);
+      	System.err.println("Output error: "+e);
    }
    System.err.println("Done handling connection.");
    return;
@@ -71,6 +73,18 @@ private boolean checkForFile(String path){
 	File f = new File(path);
 	if (f.exists()) return true;
 	else return false;
+}
+	
+private String getContentType(String input){
+	Path path = Paths.get(input);
+	String output = "";
+	try{
+		output = Files.probeContentType(path);
+	} catch (IOException ex){
+		System.err.println("Caught IOException: "+ex.getMessage());
+	}
+	System.out.println("OUTPUT: " + output);
+	return output;
 }
 
 /**
@@ -144,7 +158,9 @@ private void writeContent(OutputStream os, String path) throws Exception
 	
    File f = new File(path);
 	if (f.exists()) {
-		
+		FileInputStream in = new FileInputStream(path);
+		int c;
+		while ((c = in.read()) != -1){os.write(c);}
 		//BufferedReader file = new BufferedReader(new FileReader(f));
 		//String line = file.readLine();
 		//while (line != null) {
@@ -155,7 +171,7 @@ private void writeContent(OutputStream os, String path) throws Exception
 			// write to browser
 			//os.write(line.getBytes());
 			//line = file.readLine();
-		}
+		//}
 	}
 	else {
 		os.write("<html><head></head><body>\n".getBytes());
