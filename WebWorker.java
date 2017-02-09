@@ -144,16 +144,17 @@ private void writeContent(OutputStream os, String path) throws Exception
 	
    File f = new File(path);
 	if (f.exists()) {
-		BufferedReader file = new BufferedReader(new FileReader(f));
-		String line = file.readLine();
-		while (line != null) {
-			// search for tags and replace them as needed
-			line = line.replaceAll("<cs371date>", date);
-			line = line.replaceAll("<cs371server>", "Hello World");
+		
+		//BufferedReader file = new BufferedReader(new FileReader(f));
+		//String line = file.readLine();
+		//while (line != null) {
+			  // search for tags and replace them as needed
+			//line = line.replaceAll("<cs371date>", date);
+			//line = line.replaceAll("<cs371server>", "Hello World");
 			
 			// write to browser
-			os.write(line.getBytes());
-			line = file.readLine();
+			//os.write(line.getBytes());
+			//line = file.readLine();
 		}
 	}
 	else {
