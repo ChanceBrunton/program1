@@ -95,7 +95,7 @@ private String readHTTPRequest(InputStream is)
    	BufferedReader r = new BufferedReader(new InputStreamReader(is));
    	while (true) {
       	try {
-			while (!r.ready()) Thread.sleep(1);
+		while (!r.ready()) Thread.sleep(1);
          	line = r.readLine();
          	System.err.println("Request line: ("+line+")");
          	if (line.length()==0) break;
